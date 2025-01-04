@@ -33,7 +33,7 @@ To get a local copy of this project up and running, follow these simple steps.
 
 Make sure you have the following installed on your machine:
 
-- [Node.js](https://nodejs.org/) (version 14 or higher)
+- [Node.js](https://nodejs.org/) (version 20 or higher)
 - [npm](https://www.npmjs.com/) (comes with Node.js)
 
 ### Installation
