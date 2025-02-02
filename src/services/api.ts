@@ -1,4 +1,4 @@
-import { Note, AuthResponse, NotesResponse, User, NoteInput, SingleNoteResponse } from "../types";
+import { AuthResponse, NotesResponse, User, NoteInput, SingleNoteResponse } from "../types";
 
 const API_URL = 'http://localhost:3000/api';
 
@@ -44,10 +44,19 @@ export const api = {
     const response = await fetch(`${API_URL}/auth/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      credentials: "include",
+      credentials: 'include',
       body: JSON.stringify(user),
     });
-    return handleApiResponse(response);
+    
+    const data = await handleApiResponse<AuthResponse>(response);
+    
+    if (data.token) {
+      const expiryDate = new Date();
+      expiryDate.setDate(expiryDate.getDate() + 7);
+      document.cookie = `session_token=${data.token}; expires=${expiryDate.toUTCString()}; path=/`;
+    }
+    
+    return data;
   },
 
   async register(user: User): Promise<AuthResponse> {
@@ -61,9 +70,26 @@ export const api = {
   },
 
   async logout(): Promise<void> {
-    const response = await fetch(`${API_URL}/auth/logout`, {
-      method: 'POST',
+    document.cookie = "session_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    return Promise.resolve();
+  },
+
+  async updateNotePublic(noteId: string, isPublic: boolean): Promise<SingleNoteResponse> {
+    const response = await fetch(`${API_URL}/notes/${noteId}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
+      body: JSON.stringify({ public: isPublic }),
+    });
+    return handleApiResponse(response);
+  },
+
+  async updateNote(noteId: string, { title, content }: NoteInput): Promise<SingleNoteResponse> {
+    const response = await fetch(`${API_URL}/notes/${noteId}/public`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ title, content }),
     });
     return handleApiResponse(response);
   },

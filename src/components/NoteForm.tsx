@@ -1,21 +1,46 @@
-import { useState } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { Note, NoteInput } from "../types";
+import { debounce } from "lodash";
 
 // NoteForm.tsx
 interface NoteFormProps {
   onSubmit: (note: NoteInput) => Promise<void>;
   disabled?: boolean;
+  initialValues?: NoteInput;
+  onCancel?: () => void;
 }
 
-export function NoteForm({ onSubmit, disabled }: NoteFormProps) {
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
+export function NoteForm({ 
+  onSubmit, 
+  disabled,
+  initialValues,
+  onCancel 
+}: NoteFormProps) {
+  const [title, setTitle] = useState(initialValues?.title || '');
+  const [content, setContent] = useState(initialValues?.content || '');
+
+  useEffect(() => {
+    if (initialValues) {
+      setTitle(initialValues.title);
+      setContent(initialValues.content);
+    }
+  }, [initialValues]);
+
+  // Debounced submit handler
+  const debouncedSubmit = useCallback(
+    debounce(async (noteData: NoteInput) => {
+      await onSubmit(noteData);
+    }, 300),
+    [onSubmit]
+  );
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await onSubmit({ title, content });
-    setTitle('');
-    setContent('');
+    await debouncedSubmit({ title, content });
+    if (!initialValues) {
+      setTitle('');
+      setContent('');
+    }
   };
 
   return (
@@ -33,36 +58,16 @@ export function NoteForm({ onSubmit, disabled }: NoteFormProps) {
         placeholder="Note content"
         disabled={disabled}
       />
-      <button className="submit-button" type="submit" disabled={disabled}>
-        {disabled ? 'Creating...' : 'Create Note'}
-      </button>
-    </form>
-  );
-}
-
-// NoteList.tsx
-interface NoteListProps {
-  notes: Note[];
-  onDelete: (id: string) => Promise<void>;
-  deleteInProgress?: boolean;
-}
-
-export function NoteList({ notes, onDelete, deleteInProgress }: NoteListProps) {
-  return (
-    <div className="notes-list">
-      {notes.map(note => (
-        <div key={note.id} className="note-item">
-          <h3>{note.title}</h3>
-          <p>{note.content}</p>
-          <button 
-            className="delete-button"
-            onClick={() => onDelete(note.id)}
-            disabled={deleteInProgress}
-          >
-            Delete
+      <div className="form-buttons">
+        <button className="submit-button" type="submit" disabled={disabled}>
+          {initialValues ? 'Update Note' : 'Create Note'}
+        </button>
+        {onCancel && (
+          <button type="button" onClick={onCancel} className="cancel-button">
+            Cancel
           </button>
-        </div>
-      ))}
-    </div>
+        )}
+      </div>
+    </form>
   );
 }

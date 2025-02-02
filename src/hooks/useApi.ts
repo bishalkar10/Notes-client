@@ -1,15 +1,15 @@
 import { useCallback, useState } from "react";
 
-type UseApiReturn<T> = {
+type UseApiReturn<T, Args extends any[]> = {
   loading: boolean;
   error: string | null;
   data: T | null;
-  execute: (...args: any[]) => Promise<T>;
+  execute: (...args: Args) => Promise<T>;
 };
 
-  const useApi = <T, Args extends any[]>(
-    apiCall: (...args: Args) => Promise<T>
-  ): UseApiReturn<T> => {
+const useApi = <T, Args extends any[]>(
+  apiCall: (...args: Args) => Promise<T>
+): UseApiReturn<T, Args> => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [data, setData] = useState<T | null>(null);

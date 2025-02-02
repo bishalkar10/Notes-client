@@ -1,25 +1,38 @@
+import { memo } from 'react';
 import { Note } from '../types';
+import NoteCard from './NoteCard';
 
 interface NoteListProps {
   notes: Note[];
   onDelete: (noteId: string) => Promise<void>;
+  currentUserId: string;
+  onNoteUpdate: (noteInput: { title: string; content: string }) => Promise<void>;
+  selectedNoteId?: string;
+  onNoteSelect: (note: Note) => void;
 }
 
-export default function NoteList({ notes, onDelete }: NoteListProps) {
+const NoteList = memo(function NoteList({ 
+  notes, 
+  onDelete, 
+  currentUserId,
+  onNoteUpdate,
+  selectedNoteId,
+  onNoteSelect
+}: NoteListProps) {
   return (
-    <ul className="note-list">
+    <div className="notes-grid">
       {notes.map((note) => (
-        <li key={note.id} className="note-item">
-          <h3>{note.title}</h3>
-          <p>{note.content}</p>
-          <button 
-            onClick={() => onDelete(note.id)}
-            className="delete-button"
-          >
-            Delete
-          </button>
-        </li>
+        <NoteCard
+          key={note.id}
+          note={note}
+          onDelete={onDelete}
+          onEdit={() => onNoteSelect(note)}
+          currentUserId={currentUserId}
+          isSelected={selectedNoteId === note.id}
+        />
       ))}
-    </ul>
+    </div>
   );
-}; 
+});
+
+export default NoteList; 

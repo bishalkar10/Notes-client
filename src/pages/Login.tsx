@@ -9,18 +9,21 @@ export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const { loading, error, execute } = useApi(api.login);
-  const { setIsAuthenticated } = useAuth();
+  const { setIsAuthenticated, setUser } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     try {
-      await execute({ username, password });
-      setIsAuthenticated(true)
-      navigate("/notes")
+      const response = await execute({ username, password });
+      if (response.status === 'success' && response.user) {
+        setUser(response.user);
+        setIsAuthenticated(true);
+        navigate("/notes");
+      }
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   };
 
