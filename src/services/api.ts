@@ -17,6 +17,7 @@ async function handleApiResponse<T>(response: Response): Promise<T> {
 export const api = {
   async getNotes(): Promise<NotesResponse> {
     const response = await fetch(`${API_URL}/notes`, {
+      headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
     });
     return handleApiResponse(response);
@@ -35,6 +36,7 @@ export const api = {
   async deleteNote(noteId: string): Promise<void> {
     const response = await fetch(`${API_URL}/notes/${noteId}`, {
       method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
     });
     return handleApiResponse(response);
@@ -85,7 +87,7 @@ export const api = {
   },
 
   async updateNote(noteId: string, { title, content }: NoteInput): Promise<SingleNoteResponse> {
-    const response = await fetch(`${API_URL}/notes/${noteId}/public`, {
+    const response = await fetch(`${API_URL}/notes/${noteId}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',

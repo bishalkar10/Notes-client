@@ -1,8 +1,10 @@
 .switch {
+  --side : 14px;
+  --padding: 4px;
   position: relative;
   display: inline-block;
-  width: 40px;
-  height: 24px;
+  width: calc((var(--side) * 2) + (var(--padding) * 2));
+  height: calc(var(--side) + (var(--padding) * 2));
 }
 
 .switch input {
@@ -14,20 +16,17 @@
 .slider {
   position: absolute;
   cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
   background-color: #ccc;
   transition: .4s;
-  border-radius: 24px;
+  border-radius: 22px;
 }
 
 .slider:before {
   position: absolute;
   content: "";
-  height: 16px;
-  width: 16px;
+  height: var(--side);
+  width: var(--side);
   left: 4px;
   bottom: 4px;
   background-color: white;
@@ -36,7 +35,7 @@
 }
 
 input:checked + .slider {
-  background-color: #2196F3;
+  background-color: #1B1B1B;
 }
 
 input:disabled + .slider {
@@ -45,5 +44,5 @@ input:disabled + .slider {
 }
 
 input:checked + .slider:before {
-  transform: translateX(16px);
+  transform: translateX(var(--side));
 } 

@@ -1,37 +1,30 @@
 import { memo, useCallback } from 'react';
 import { Note } from '../types';
-// import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/AuthContext';
 import { formatDistanceToNow } from 'date-fns';
 import Switch from './Switch';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faEdit } from '@fortawesome/free-solid-svg-icons';
 import '../styles/NoteCard.css';
-
+import { useNotes } from '../context/NotesContext';
 interface NoteCardProps {
   note: Note;
-  onDelete: (id: string) => Promise<void>;
-  onTogglePublic: (id: string, isPublic: boolean) => Promise<void>;
-  onEdit: (note: Note) => void;
-  currentUserId: string;
-  isSelected?: boolean;
 }
 
 const NoteCard = memo(function NoteCard({ 
-  note, 
-  onDelete, 
-  onTogglePublic,
-  onEdit,
-  currentUserId,
-  isSelected = false
+  note,
 }: NoteCardProps) {
-  const isOwner = currentUserId === note.user;
+  const { user } = useAuth()
+  const { deleteNote, togglePublic, selectedNote, setSelectedNote } = useNotes();
 
-  const handleTogglePublic = useCallback(async () => {
-    await onTogglePublic(note.id, !note.public);
-  }, [note.id, note.public, onTogglePublic]);
+  const isOwner = user?.id === note.user;
+
+  const isSelected = selectedNote?.id === note.id;
 
   return (
-    <div className={`note-card ${isSelected ? 'selected' : ''}`}>
+    <div className={`note-card ${isSelected ? 'selected' : ''}`}
+      onClick={() => setSelectedNote(note)}
+    >
       <div className="note-card-header">
         <h3>{note.title}</h3>
       </div>
@@ -41,7 +34,7 @@ const NoteCard = memo(function NoteCard({
       <div className="note-footer">
         <div className="note-metadata">
           {note.updatedAt && (
-            <span>Last modified {formatDistanceToNow(new Date(note.updatedAt))} ago</span>
+            <span>{formatDistanceToNow(new Date(note.updatedAt))} ago</span>
           )}
         </div>
         
@@ -52,19 +45,12 @@ const NoteCard = memo(function NoteCard({
                 <span>Public</span>
                 <Switch
                   checked={note.public}
-                  onChange={handleTogglePublic}
+                  onChange={() => togglePublic(note.id, !note.public)}
                   disabled={!isOwner}
                 />
               </div>
               <button 
-                onClick={() => onEdit(note)}
-                className="icon-button edit-button"
-                title="Edit note"
-              >
-                <FontAwesomeIcon icon={faEdit} />
-              </button>
-              <button 
-                onClick={() => onDelete(note.id)}
+                onClick={() => deleteNote(note.id)}
                 className="icon-button delete-button"
                 title="Delete note"
               >

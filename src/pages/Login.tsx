@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { api } from "../services/api";
 import '../styles/Auth.css';
@@ -9,21 +9,31 @@ export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const { loading, error, execute } = useApi(api.login);
-  const { setIsAuthenticated, setUser } = useAuth();
+  const { isAuthenticated, setIsAuthenticated, setUser } = useAuth();
   const navigate = useNavigate();
+
+  useEffect(()=> {
+    if (isAuthenticated){
+      navigate("/notes")
+    }
+  }, [isAuthenticated])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     try {
       const response = await execute({ username, password });
-      if (response.status === 'success' && response.user) {
+      console.log('Login response:', response);
+      
+      if (response?.status === 'success' && response?.user) {
         setUser(response.user);
         setIsAuthenticated(true);
-        navigate("/notes");
+        console.log('Authentication successful, preparing to navigate...');
+      } else {
+        console.log('Authentication failed:', response);
       }
     } catch (err) {
-      console.error(err);
+      console.error('Login error:', err);
     }
   };
 

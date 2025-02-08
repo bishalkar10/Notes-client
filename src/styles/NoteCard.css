@@ -3,6 +3,7 @@
   background: white;
   border-radius: 8px;
   padding: 16px;
+  max-height: 160px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   margin-bottom: 16px;
   transition: transform 0.2s, box-shadow 0.2s;
@@ -16,8 +17,12 @@
 }
 
 .note-card.selected {
-  border-color: #0077ff;
-  background-color: #f8f9fa;
+  background-color: #fcb660;
+}
+.note-card.selected .note-card-header, 
+.note-card.selected .note-content,
+.note-card.selected .note-footer {
+  color: #fffdf6;
 }
 
 .note-card-header {
@@ -41,8 +46,16 @@
 
 .note-content {
   margin: 8px 0;
-  color: #666;
+  color: #555D50;
   flex-grow: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  line-clamp: 2;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+
+
 }
 
 .note-footer {
@@ -86,11 +99,8 @@
   color: #666;
 }
 
-.edit-button:hover {
-  color: #2196F3;
-}
 
-.delete-button {
+.note-card .delete-button {
     position: absolute;
     top: 10px;
     right: 10px;
