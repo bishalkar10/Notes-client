@@ -23,6 +23,14 @@ export const api = {
     return handleApiResponse(response);
   },
 
+  async getNote(noteId: string): Promise<SingleNoteResponse> {
+    const response = await fetch(`${API_URL}/notes/${noteId}`, {
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+    });
+    return handleApiResponse(response);
+  },
+
   async createNote(noteInput: NoteInput): Promise<SingleNoteResponse> {
     const response = await fetch(`${API_URL}/notes`, {
       method: 'POST',

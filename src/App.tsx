@@ -8,12 +8,15 @@ import {
 import { useAuth } from "./context/AuthContext";
 import Loader from "./components/Loader";
 import { AuthProvider } from './context/AuthContext';
-import { NotesProvider } from './context/NotesContext';
+import { NotesProvider, useNotes } from './context/NotesContext';
+import './App.css';
+import { useRef } from "react";
 
 // Lazy load pages
 const Login = lazy(() => import("./pages/Login"));
 const Register = lazy(() => import("./pages/Register"));
 const Notes = lazy(() => import("./pages/Notes"));
+const NoteView = lazy(() => import("./pages/NoteView"));
 
 function App() {
   const { isAuthenticated, loading } = useAuth();
@@ -23,36 +26,71 @@ function App() {
   }
 
   return (
-    <Router>
-        <NotesProvider>
-          <Suspense fallback={<Loader />}>
-            <Routes>
-              <Route
-                path="/"
-                element={
-                  isAuthenticated ? (
-                    <Navigate to="/notes" />
-                  ) : (
-                    <Navigate to="/login" />
-                  )
-                }
-              />
-              <Route
-                path="/notes"
-                element={isAuthenticated ? <Notes /> : <Navigate to="/login" />}
-              />
-              <Route
-                path="/login"
-                element={isAuthenticated ? <Navigate to="/notes" /> : <Login />}
-              />
-              <Route
-                path="/register"
-                element={isAuthenticated ? <Navigate to="/notes" /> : <Register />}
-              />
-            </Routes>
-          </Suspense>
-        </NotesProvider>
-    </Router>
+    <div className="app-container">
+      <Router>
+          <NotesProvider>
+            <AppContent />
+          </NotesProvider>
+      </Router>
+    </div>
+  );
+}
+
+function AppContent() {
+  const { isAuthenticated, loading } = useAuth();
+  const { showDeleteConfirmDialog, noteIdToDelete, deleteNote, closeDeleteConfirmDialog, dialogRef } = useNotes();
+
+  return (
+    <>
+      <Suspense fallback={<Loader />}>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              isAuthenticated ? (
+                <Navigate to="/notes" />
+              ) : (
+                <Navigate to="/login" />
+              )
+            }
+          />
+          <Route
+            path="/notes"
+            element={isAuthenticated ? <Notes /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/notes/:id"
+            element={<NoteView />}
+          />
+          <Route
+            path="/login"
+            element={isAuthenticated ? <Navigate to="/notes" /> : <Login />}
+          />
+          <Route
+            path="/register"
+            element={isAuthenticated ? <Navigate to="/notes" /> : <Register />}
+          />
+        </Routes>
+      </Suspense>
+
+      {showDeleteConfirmDialog && (
+        <dialog ref={dialogRef} className="delete-confirm-dialog" onClick={(e) => e.stopPropagation()}>
+          <p>Are you sure you want to delete this note?</p>
+          <div className="dialog-actions">
+            <button onClick={(e) => {
+              e.stopPropagation();
+              if (noteIdToDelete) {
+                deleteNote(noteIdToDelete);
+              }
+            }}>Confirm</button>
+            <button onClick={(e) => {
+              e.stopPropagation();
+              closeDeleteConfirmDialog();
+            }}>Cancel</button>
+          </div>
+        </dialog>
+      )}
+    </>
   );
 }
 

@@ -1,15 +1,21 @@
-import { memo } from 'react';
-import '../styles/Switch.css';
+import { memo, ChangeEvent, MouseEvent } from "react";
+import "../styles/Switch.css";
 
 interface SwitchProps {
   checked: boolean;
-  onChange: () => void;
+  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  onClick?: (e: MouseEvent<HTMLLabelElement>) => void;
   disabled?: boolean;
 }
 
-const Switch = memo(function Switch({ checked, onChange, disabled }: SwitchProps) {
+const Switch = memo(function Switch({
+  checked,
+  onChange,
+  onClick,
+  disabled,
+}: SwitchProps) {
   return (
-    <label className="switch">
+    <label className="switch" onClick={onClick}>
       <input
         type="checkbox"
         checked={checked}
@@ -21,4 +27,4 @@ const Switch = memo(function Switch({ checked, onChange, disabled }: SwitchProps
   );
 });
 
-export default Switch; 
+export default Switch;

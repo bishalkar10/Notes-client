@@ -30,24 +30,27 @@ export default function Notes() {
 		<div className="container">
 			<NoteList />
 
-		<div className='note-detail-container'>
-			<NoteDetail 
-				isCreating={isCreating}
-				onCreateCancel={() => setIsCreating(false)} 
-			/>
-
-			{!isCreating && (
-				<button 
-					className="add-note-button"
-					onClick={() => {
-						setSelectedNote(null)
-						setIsCreating(true)
+			<div className='note-detail-container'>
+				<NoteDetail
+					isCreating={isCreating}
+					onCreateCancel={() => setIsCreating(false)}
+					onCreateNew={() => {
+						setSelectedNote(null);
+						setIsCreating(true);
 					}}
-					title="Create new note"
-				>
-					<FontAwesomeIcon icon={faPlus} />
-				</button>
-			)}
+				/>
+
+				{/* {!isCreating ?
+					<button
+						className="add-note-button"
+						onClick={() => {
+							setSelectedNote(null)
+							setIsCreating(true)
+						}}
+						title="Create new note"
+					>
+						<FontAwesomeIcon icon={faPlus} />
+					</button> : null} */}
 			</div>
 		</div>
 	);
