@@ -8,7 +8,7 @@ import { motion } from "framer-motion";
 import "../styles/Auth.css"
 
 export default function Login() {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { loading, error, execute } = useApi(api.login);
   const { isAuthenticated, setIsAuthenticated, setUser } = useAuth();
@@ -23,7 +23,7 @@ export default function Login() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await execute({ username, password });
+      const response = await execute({ email, password });
       if (response?.status === 'success' && response?.user) {
         setUser(response.user);
         setIsAuthenticated(true);
@@ -68,12 +68,12 @@ export default function Login() {
               </div>
               <input
                 type="email"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 placeholder="Email address"
                 required
                 disabled={loading}
-                autoComplete="username"
+                autoComplete="email"
                 className="login-input"
               />
             </div>

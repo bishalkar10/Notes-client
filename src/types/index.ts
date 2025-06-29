@@ -31,7 +31,7 @@ export interface AuthResponse {
 }
 
 export interface User {
-  username: string;
+  email: string;
   password: string;
 }
 
@@ -42,5 +42,5 @@ export interface NoteInput {
 
 export interface UserData {
   id: string;
-  username: string;
+  email: string;
 }

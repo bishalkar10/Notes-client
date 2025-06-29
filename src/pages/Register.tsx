@@ -3,17 +3,17 @@ import { Link, useNavigate } from "react-router-dom";
 import { api } from "../services/api";
 import useApi from "../hooks/useApi";
 import '../styles/Auth.css';
-import { FiUser, FiLock, FiArrowRight } from "react-icons/fi";
+import { FiMail, FiLock, FiArrowRight } from "react-icons/fi";
 import { motion } from "framer-motion";
 
 export default function Register() {
     const { loading, error, execute } = useApi(api.register);
-    const [username, setUsername] = useState("");
+    const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        await execute({username, password});
+        await execute({email, password});
         navigate('/login')
     };
 
@@ -27,7 +27,7 @@ export default function Register() {
                     className="login-content"
                 >
                     <div className="login-icon-wrapper">
-                        <FiUser className="login-icon" />
+                        <FiMail className="login-icon" />
                     </div>
                     
                     <h2 className="login-title">Create an account</h2>
@@ -48,16 +48,16 @@ export default function Register() {
                     <form onSubmit={handleSubmit} className="login-form">
                         <div className="input-group">
                             <div className="input-icon">
-                                <FiUser />
+                                <FiMail />
                             </div>
                             <input
-                                type="text"
-                                value={username}
-                                onChange={(e) => setUsername(e.target.value)}
-                                placeholder="Username"
+                                type="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                placeholder="Email address"
                                 required
                                 disabled={loading}
-                                autoComplete="username"
+                                autoComplete="email"
                                 className="login-input"
                             />
                         </div>

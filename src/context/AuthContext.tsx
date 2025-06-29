@@ -31,14 +31,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           return;
         }
 
-        const decodedToken = jwtDecode<{ exp: number; id: string; username: string }>(token);
+        const decodedToken = jwtDecode<{ exp: number; id: string; email: string }>(token);
         const isValid = decodedToken.exp * 1000 > Date.now();
 
         if (!isValid) {
           document.cookie = "session_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
           setUser(null);
         } else {
-          setUser({ id: decodedToken.id, username: decodedToken.username });
+          setUser({ id: decodedToken.id, email: decodedToken.email });
         }
 
         setIsAuthenticated(isValid);
