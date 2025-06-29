@@ -7,10 +7,8 @@ import {
 } from "react-router-dom";
 import { useAuth } from "./context/AuthContext";
 import Loader from "./components/Loader";
-import { AuthProvider } from './context/AuthContext';
 import { NotesProvider, useNotes } from './context/NotesContext';
 import './App.css';
-import { useRef } from "react";
 
 // Lazy load pages
 const Login = lazy(() => import("./pages/Login"));
@@ -19,7 +17,7 @@ const Notes = lazy(() => import("./pages/Notes"));
 const NoteView = lazy(() => import("./pages/NoteView"));
 
 function App() {
-  const { isAuthenticated, loading } = useAuth();
+  const { loading } = useAuth();
 
   if (loading) {
     return <Loader />;
@@ -37,7 +35,7 @@ function App() {
 }
 
 function AppContent() {
-  const { isAuthenticated, loading } = useAuth();
+  const { isAuthenticated } = useAuth();
   const { showDeleteConfirmDialog, noteIdToDelete, deleteNote, closeDeleteConfirmDialog, dialogRef } = useNotes();
 
   return (

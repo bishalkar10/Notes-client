@@ -19,7 +19,7 @@ interface NoteDetailProps {
 }
 
 const NoteDetail = ({ isCreating, onCreateCancel, onCreateNew }: NoteDetailProps) => {
-  const { selectedNote, createNote, updateNote, deleteNote, openDeleteConfirmDialog } = useNotes();
+  const { selectedNote, createNote, updateNote, openDeleteConfirmDialog } = useNotes();
   const [isEditing, setIsEditing] = useState(false);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -55,11 +55,6 @@ const NoteDetail = ({ isCreating, onCreateCancel, onCreateNew }: NoteDetailProps
       await updateNote(selectedNote.id, noteData);
       setIsEditing(false);
     }
-  };
-
-  const handleDelete = () => {
-    if (!selectedNote) return;
-    openDeleteConfirmDialog(selectedNote.id);
   };
 
   const handleCancel = () => {
