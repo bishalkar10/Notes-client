@@ -57,11 +57,9 @@ const NoteDetail = ({ isCreating, onCreateCancel, onCreateNew }: NoteDetailProps
     }
   };
 
-  const handleDelete = async () => {
+  const handleDelete = () => {
     if (!selectedNote) return;
-    if (window.confirm("Are you sure you want to delete this note?")) {
-      await deleteNote(selectedNote.id);
-    }
+    openDeleteConfirmDialog(selectedNote.id);
   };
 
   const handleCancel = () => {

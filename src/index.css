@@ -136,10 +136,3 @@ input, textarea {
   border-radius: var(--radius-md);
   transition: all 0.2s ease;
 }
-
-input:focus, textarea:focus {
-  outline: none;
-  border-color: var(--border-focus);
-  box-shadow: 0 0 0 3px var(--focus-ring);
-}
-

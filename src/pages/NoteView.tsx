@@ -183,7 +183,7 @@ export default function NoteView() {
             <h1 className="note-view-title">{note.title}</h1>
             
             <div className="note-view-meta">
-              {note.updatedAt && (
+              {note.updatedAt && isAuthenticated && (
                 <span>Updated {formatDistanceToNow(new Date(note.updatedAt))} ago</span>
               )}
               {note.public && <span className="public-badge">Public</span>}

@@ -96,6 +96,34 @@
   box-shadow: 0 0 0 2px var(--focus-ring);
 }
 
+.password-toggle-button {
+  position: absolute;
+  right: var(--space-md);
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: var(--text-light);
+  cursor: pointer;
+  padding: var(--space-xs);
+  border-radius: var(--radius-sm);
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-base);
+}
+
+.password-toggle-button:hover {
+  color: var(--text-dark);
+  background-color: var(--bg-accent);
+}
+
+.password-toggle-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 /* Login Options */
 .login-options {
   display: flex;

@@ -3,13 +3,14 @@ import { Link, useNavigate } from "react-router-dom";
 import { api } from "../services/api";
 import useApi from "../hooks/useApi";
 import '../styles/Auth.css';
-import { FiMail, FiLock, FiArrowRight } from "react-icons/fi";
+import { FiMail, FiLock, FiEye, FiEyeOff, FiArrowRight } from "react-icons/fi";
 import { motion } from "framer-motion";
 
 export default function Register() {
     const { loading, error, execute } = useApi(api.register);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate();
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -67,7 +68,7 @@ export default function Register() {
                                 <FiLock />
                             </div>
                             <input
-                                type="password"
+                                type={showPassword ? "text" : "password"}
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 placeholder="Password"
@@ -76,6 +77,14 @@ export default function Register() {
                                 autoComplete="new-password"
                                 className="login-input"
                             />
+                            <button
+                                type="button"
+                                className="password-toggle-button"
+                                onClick={() => setShowPassword(!showPassword)}
+                                disabled={loading}
+                            >
+                                {showPassword ? <FiEyeOff /> : <FiEye />}
+                            </button>
                         </div>
 
                         <motion.button

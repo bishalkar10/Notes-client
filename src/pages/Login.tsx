@@ -3,13 +3,14 @@ import { Link, useNavigate } from "react-router-dom";
 import { api } from "../services/api";
 import useApi from "../hooks/useApi";
 import { useAuth } from "../context/AuthContext";
-import { FiLogIn, FiMail, FiLock, FiArrowRight } from "react-icons/fi";
+import { FiLogIn, FiMail, FiLock, FiEye, FiEyeOff, FiArrowRight } from "react-icons/fi";
 import { motion } from "framer-motion";
 import "../styles/Auth.css"
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const { loading, error, execute } = useApi(api.login);
   const { isAuthenticated, setIsAuthenticated, setUser } = useAuth();
   const navigate = useNavigate();
@@ -67,6 +68,8 @@ export default function Login() {
                 <FiMail />
               </div>
               <input
+                id="email"
+                name="email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -83,7 +86,9 @@ export default function Login() {
                 <FiLock />
               </div>
               <input
-                type="password"
+                id="password"
+                name="password"
+                type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Password"
@@ -92,10 +97,18 @@ export default function Login() {
                 autoComplete="current-password"
                 className="login-input"
               />
+              <button
+                type="button"
+                className="password-toggle-button"
+                onClick={() => setShowPassword(!showPassword)}
+                disabled={loading}
+              >
+                {showPassword ? <FiEyeOff /> : <FiEye />}
+              </button>
             </div>
 
             <div className="login-options">
-              <div className="remember-me">
+              {/* <div className="remember-me">
                 <input
                   id="remember-me"
                   name="remember-me"
@@ -105,13 +118,13 @@ export default function Login() {
                 <label htmlFor="remember-me" className="remember-label">
                   Remember me
                 </label>
-              </div>
+              </div> */}
 
-              <div className="forgot-password">
+              {/* <div className="forgot-password">
                 <Link to="/forgot-password" className="forgot-link">
                   Forgot password?
                 </Link>
-              </div>
+              </div> */}
             </div>
 
             <motion.button
